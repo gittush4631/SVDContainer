@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: isvd-seed
+  labels:
+    app: isvd-seed
+
+
+spec:
+ ttlSecondsAfterFinished: 100
+ backoffLimit: 1
+
+ template:
+
+  spec:
+    volumes:
+    - name: config-volume
+      configMap:
+        name: isvd-seed-config
+    - name: principal-volume
+      persistentVolumeClaim:
+        claimName: isvd-claim
+    - name: data-volume
+      persistentVolumeClaim:
+        claimName: isvd-claim-replica
+
+    containers:
+    - name: isvd-seed
+
+      # The fully qualified name of the image.
+      image: icr.io/isvd/verify-directory-seed:latest
+
+      env:
+      - name: YAML_CONFIG_FILE
+        value: /var/isvd/config/config.yaml
+
+      volumeMounts:
+      - name: config-volume
+        mountPath: /var/isvd/config
+      - name: data-volume
+        mountPath: /var/isvd/data
+      - name: principal-volume
+        mountPath: /var/isvd/source
+
+    restartPolicy: Never
