@@ -1,5 +1,6 @@
 # SVDContainer
 Replication of ISVD Containers
+Reference : https://www.ibm.com/docs/en/svd/10.0.2?topic=scenarios-scaling-directory-server-instances
 
 We are changing the config of primary and secondary- check the PV section, also change suffix section and replication section in Config
 
